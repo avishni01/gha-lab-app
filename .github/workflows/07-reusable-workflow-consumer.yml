@@ -3,14 +3,13 @@ name: 07 Reusable Workflow Consumer
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  # TODO: After splitting this lab into separate repositories, replace this local
-  # path with:
-  # uses: OWNER/gha-lab-shared-workflows/.github/workflows/reusable-python-ci.yml@main
-  call-local-python-ci:
-    name: Call local reusable Python CI
-    uses: ./.github/workflows/reusable-python-ci-placeholder.yml
+  call-shared-python-ci:
+    name: Call shared reusable Python CI
+    uses: avishni01/gha-lab-shared-workflows/.github/workflows/reusable-python-ci.yml@main
     with:
       python-version: "3.12"
       test-command: pytest
-
