@@ -1,0 +1,42 @@
+name: 05 Debug Practice
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnostics:
+    name: Safe diagnostics
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print safe runner context
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch or ref: $GITHUB_REF"
+          echo "Event name: $GITHUB_EVENT_NAME"
+          echo "Commit SHA: $GITHUB_SHA"
+
+      - name: Successful example step
+        run: echo "This step succeeds."
+
+      - name: Runs only after success
+        if: success()
+        run: echo "The workflow is still successful."
+
+      - name: Training failure
+        run: |
+          echo "This failure is intentional so the failure() and always() examples run."
+          exit 1
+
+      - name: Runs after failure
+        if: failure()
+        run: echo "A prior required step failed."
+
+      - name: Always runs
+        if: always()
+        run: echo "Use always() for cleanup and final diagnostics."

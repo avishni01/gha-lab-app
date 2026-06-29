@@ -1,0 +1,29 @@
+name: 02 Build And Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  package:
+    name: Package source artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create package directory
+        run: |
+          mkdir -p dist
+          cp -R app requirements.txt README.md dist/
+
+      - name: Create archive
+        run: tar -czf gha-lab-app-source.tar.gz -C dist .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gha-lab-app-source
+          path: gha-lab-app-source.tar.gz
+          if-no-files-found: error
+

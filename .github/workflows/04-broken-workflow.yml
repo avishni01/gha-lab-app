@@ -1,0 +1,38 @@
+name: 04 Broken Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  broken-training-job:
+    name: Intentionally broken job
+    runs-on: ubuntu-latest
+
+    # This workflow is intentionally broken for training.
+    # Fix one failure at a time and re-run it to practice workflow debugging.
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Wrong working directory
+        working-directory: ./not-the-app
+        run: pwd
+
+      - name: Bad dependency command
+        run: pip install -r requirements-prod.txt
+
+      - name: Missing environment variable
+        run: python -c "import os; assert os.environ['APP_ENV']"
+
+      - name: Bad secret reference for training
+        run: |
+          echo "This step expects a placeholder secret to exist."
+          test -n "${{ secrets.DOES_NOT_EXIST_FOR_TRAINING }}"
+
+      - name: Incorrect artifact path
+        uses: actions/upload-artifact@v4
+        with:
+          name: missing-training-artifact
+          path: dist/this-file-does-not-exist.zip
+          if-no-files-found: error
+
